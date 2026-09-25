@@ -44,6 +44,24 @@ In the app, choose **Import Entries**. Select or drop a `.csv` or `.xlsx` file, 
 
 Both terminals must remain running while using the app and importing files. Imported entrants are held for the current browser session and are cleared if the page is refreshed.
 
+## Deploy the frontend and API separately
+
+Set `CORS_ORIGINS` on the API to a comma-separated list of exact frontend origins, including the scheme and optional port. For example:
+
+```text
+CORS_ORIGINS=https://giveaway.example.com,https://www.giveaway.example.com
+```
+
+Set `apiBaseUrl` in `public/app-config.json` to the API origin, without a trailing slash, before building/deploying the frontend:
+
+```json
+{
+	"apiBaseUrl": "https://api.example.com"
+}
+```
+
+The API serves both `/api` requests and `/avatars` images. Keep the CORS allowlist limited to trusted frontend origins.
+
 ## Start with Docker
 
 Make sure Docker Desktop is running, then open PowerShell in the project folder and run:

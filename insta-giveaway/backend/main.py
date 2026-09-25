@@ -5,6 +5,7 @@ import csv
 import io
 import ipaddress
 import mimetypes
+import os
 import socket
 import uuid
 from pathlib import Path
@@ -25,9 +26,17 @@ MAX_ROWS = 10_000
 AVATAR_COLORS = ["#e7c8b3", "#c7d5c3", "#e7c2c7", "#c9d2e0", "#dfd2a7", "#c4d8dc"]
 
 app = FastAPI(title="Lucky Draw Import API")
+cors_origins = [
+    origin.strip()
+    for origin in os.getenv(
+        "CORS_ORIGINS",
+        "http://localhost:4200,http://127.0.0.1:4200",
+    ).split(",")
+    if origin.strip()
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200", "http://127.0.0.1:4200"],
+    allow_origins=cors_origins,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )

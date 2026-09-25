@@ -6,13 +6,20 @@ interface ImportResponse {
   warnings: string[];
 }
 
+interface AppConfig {
+  apiBaseUrl?: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ImportApiService {
+  private apiBaseUrl?: Promise<string>;
+
   async upload(file: File): Promise<ImportResponse> {
     const form = new FormData();
     form.append('file', file);
 
-    const response = await fetch('/api/import', {
+    const apiBaseUrl = await this.getApiBaseUrl();
+    const response = await fetch(`${apiBaseUrl}/api/import`, {
       method: 'POST',
       body: form,
     });
@@ -25,9 +32,16 @@ export class ImportApiService {
     return {
       entrants: result.entrants.map((entrant: Entrant) => ({
         ...entrant,
-        avatar: entrant.avatar,
+        avatar: entrant.avatar ? new URL(entrant.avatar, apiBaseUrl || window.location.origin).href : '',
       })),
       warnings: result.warnings ?? [],
     };
+  }
+
+  private getApiBaseUrl(): Promise<string> {
+    this.apiBaseUrl ??= fetch('/app-config.json')
+      .then((response) => response.json() as Promise<AppConfig>)
+      .then((config) => (config.apiBaseUrl ?? '').replace(/\/$/, ''));
+    return this.apiBaseUrl;
   }
 }
