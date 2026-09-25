@@ -2,7 +2,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: insta-giveaway/backend/Dockerfile
     environment:
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:4200,http://127.0.0.1:4200}
     expose:
@@ -24,7 +24,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: insta-giveaway/Dockerfile
     depends_on:
       api:
         condition: service_healthy

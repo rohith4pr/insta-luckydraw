@@ -4,9 +4,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
 WORKDIR /app
-COPY backend/requirements.txt ./requirements.txt
+COPY insta-giveaway/backend/requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
-COPY backend/ ./backend/
+COPY insta-giveaway/backend/ ./backend/
 RUN mkdir -p /app/backend/avatar_cache \
     && adduser --disabled-password --gecos "" appuser \
     && chown -R appuser:appuser /app
