@@ -1,0 +1,9 @@
+node_modules
+.venv
+.angular
+coverage
+dist
+.git
+backend/__pycache__
+backend/avatar_cache
+**/*.pyc

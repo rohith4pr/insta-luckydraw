@@ -1,0 +1,117 @@
+<div class="app-shell">
+  <header class="topbar">
+    <a class="brand" routerLink="/" aria-label="Lucky Draw home">
+      <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+      <span>lucky<span class="brand-light">draw</span></span>
+    </a>
+    <div class="topbar-status"><span class="status-dot"></span> DRAW ROOM <span class="status-divider">/</span> SESSION 001</div>
+    <a class="header-link" routerLink="/import">IMPORT ENTRIES <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main id="top" class="workspace">
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow"><span class="eyebrow-line"></span> YOUR GIVEAWAY, SETTLED</p>
+        <h1 id="page-title">A little suspense.<br /><span>A very lucky name.</span></h1>
+      </div>
+      <div class="intro-note">
+        <span class="note-star" aria-hidden="true">✳</span>
+        <p>Every entry gets<br />one fair shot.</p>
+      </div>
+    </section>
+
+    <div class="content-grid">
+      <section class="draw-column" aria-label="Winner draw">
+        <div class="draw-stage" [class.is-spinning]="isSpinning()" [class.has-winner]="winner()">
+          <div class="stage-topline">
+            <span class="stage-label"><span class="live-dot"></span>{{ isSpinning() ? 'DRAW IN PROGRESS' : winner() ? 'DRAW COMPLETE' : 'READY WHEN YOU ARE' }}</span>
+            <span class="stage-index">NO. 001 <span aria-hidden="true">·</span> RANDOM DRAW</span>
+          </div>
+
+          <div class="stage-center" aria-live="polite" aria-atomic="true">
+            @if (currentEntrant(); as entrant) {
+              <div class="portrait-wrap" [class.portrait-winner]="winner()">
+                <span class="portrait-halo"></span>
+                @if (entrant.avatar) {
+                  <img class="spotlight-avatar" [src]="entrant.avatar" [alt]="'Avatar for ' + entrant.username" [style.background-color]="entrant.color" />
+                } @else {
+                  <span class="spotlight-avatar avatar-placeholder" [style.background-color]="entrant.color">{{ entrant.username.slice(0, 1).toUpperCase() }}</span>
+                }
+                @if (winner()) { <span class="winner-seal" aria-label="Winner">★</span> }
+              </div>
+              <p class="stage-caption">{{ winner() ? 'THE LUCKY ONE IS' : isSpinning() ? 'PICKING FROM THE LIST' : 'TONIGHT’S SPOTLIGHT' }}</p>
+              <p class="spotlight-name">@{{ entrant.username }}</p>
+              <p class="stage-subcaption">{{ winner() ? 'Congratulations, you’ve been picked!' : entrants().length + ' names in the running' }}</p>
+            } @else if (entrants().length > 0) {
+              <div class="empty-draw"><span aria-hidden="true">✳</span><p>Ready for the draw</p><span>{{ entrants().length }} entries loaded</span></div>
+            } @else {
+              <div class="empty-draw"><span aria-hidden="true">✳</span><p>No entries yet</p><a routerLink="/import">Import a CSV or Excel file</a></div>
+            }
+          </div>
+
+          <div class="stage-bottomline">
+            <span class="bottom-note"><span class="bottom-spark" aria-hidden="true">✳</span> GOOD LUCK, EVERYONE</span>
+            <span class="bottom-note">EST. FAIRNESS <span class="fairness-value">100%</span></span>
+          </div>
+          <span class="stage-orbit orbit-one" aria-hidden="true"></span>
+          <span class="stage-orbit orbit-two" aria-hidden="true"></span>
+        </div>
+
+        <div class="draw-controls">
+          <button class="pick-button" type="button" (click)="pickWinner()" [disabled]="isSpinning() || entrants().length === 0">
+            <span class="button-icon" aria-hidden="true">{{ isSpinning() ? '↻' : '✳' }}</span>
+            <span>{{ isSpinning() ? 'PICKING A WINNER' : winner() ? 'DRAW AGAIN' : 'PICK A WINNER' }}</span>
+            <span class="button-arrow" aria-hidden="true">{{ isSpinning() ? '' : '→' }}</span>
+          </button>
+          <p class="control-footnote"><span class="lock-icon" aria-hidden="true">◇</span> One name is selected at random from this list</p>
+        </div>
+
+        @if (winner()) {
+          <div class="winner-result" role="status">
+            <span class="result-star" aria-hidden="true">✳</span>
+            <span><strong>@{{ winner()?.username }}</strong> is the winner!</span>
+            <button class="result-dismiss" type="button" aria-label="Dismiss winner" (click)="winner.set(null)">×</button>
+          </div>
+        }
+      </section>
+
+      <aside id="entrants" class="entrants-panel" aria-labelledby="entrants-heading">
+        @if (warnings().length) {
+          <p class="import-message import-warning" role="status">{{ warnings().join(' ') }}</p>
+        }
+        <div class="entrants-heading-row">
+          <div>
+            <p class="eyebrow panel-eyebrow">THE CONTENDERS</p>
+            <h2 id="entrants-heading">In the draw<span class="heading-period">.</span></h2>
+          </div>
+          <span class="entrant-count">{{ entrants().length }} <span>ENTRIES</span></span>
+        </div>
+
+        <div class="entrant-list" role="list">
+          @for (entrant of entrants(); track entrant.username; let index = $index) {
+            <div class="entrant-row" role="listitem" [class.selected-entrant]="winner()?.username === entrant.username">
+              <span class="entrant-number">{{ (index + 1).toString().padStart(2, '0') }}</span>
+              @if (entrant.avatar) {
+                <img class="entrant-avatar" [src]="entrant.avatar" [alt]="''" [style.background-color]="entrant.color" loading="lazy" />
+              } @else {
+                <span class="entrant-avatar avatar-placeholder" [style.background-color]="entrant.color">{{ entrant.username.slice(0, 1).toUpperCase() }}</span>
+              }
+              <span class="entrant-name">@{{ entrant.username }}</span>
+              @if (winner()?.username === entrant.username) { <span class="winner-tag">WINNER</span> } @else { <span class="entry-check" aria-hidden="true">✓</span> }
+            </div>
+          }
+        </div>
+        <div class="list-footer">
+          <span class="list-footer-mark" aria-hidden="true">✳</span>
+          <span>ALL ENTRIES INCLUDED</span>
+          <a class="import-inline" routerLink="/import">CHANGE LIST</a>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="page-footer">
+      <span>MADE FOR THE MOMENT BEFORE THE ANNOUNCEMENT</span>
+      <span class="footer-right"><span>LIVE SESSION</span><span class="status-dot"></span></span>
+    </footer>
+  </main>
+</div>

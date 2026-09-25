@@ -1,0 +1,86 @@
+<div class="app-shell import-shell">
+  <header class="topbar">
+    <a class="brand" routerLink="/" aria-label="Lucky Draw home">
+      <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+      <span>lucky<span class="brand-light">draw</span></span>
+    </a>
+    <div class="topbar-status"><span class="status-dot"></span> ENTRY MANAGER</div>
+    <a class="header-link" routerLink="/">BACK TO DRAW <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main class="workspace import-workspace">
+    <section class="intro import-intro" aria-labelledby="import-title">
+      <div>
+        <p class="eyebrow"><span class="eyebrow-line"></span> BRING EVERYONE IN</p>
+        <h1 id="import-title">Load the names.<br /><span>Let luck do the rest.</span></h1>
+      </div>
+      <div class="intro-note">
+        <span class="note-star" aria-hidden="true">✳</span>
+        <p>CSV or Excel<br />up to 10 MB.</p>
+      </div>
+    </section>
+
+    <section class="import-layout" aria-label="Upload giveaway entrants">
+      <div class="import-main">
+        <label
+          class="upload-zone"
+          [class.dragging]="isDragging()"
+          [class.file-selected]="selectedFile()"
+          (dragover)="$event.preventDefault(); setDragging(true)"
+          (dragleave)="setDragging(false)"
+          (drop)="dropFile($event)"
+        >
+          <input class="file-input" type="file" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" (change)="chooseFile($event)" />
+          <span class="upload-symbol" aria-hidden="true">↥</span>
+          @if (selectedFile(); as file) {
+            <span class="upload-title">{{ file.name }}</span>
+            <span class="upload-description">{{ (file.size / 1024).toFixed(0) }} KB <span class="upload-dot">·</span> Ready to import</span>
+          } @else {
+            <span class="upload-title">Drop your file here</span>
+            <span class="upload-description">or <span class="browse-link">browse files</span> from your device</span>
+          }
+          <span class="file-types"><span>CSV</span><span>XLSX</span></span>
+        </label>
+
+        @if (errorMessage()) {
+          <p class="import-message import-error" role="alert">{{ errorMessage() }}</p>
+        }
+        <button class="pick-button import-button" type="button" (click)="upload()" [disabled]="!selectedFile() || isUploading()" [attr.aria-busy]="isUploading()">
+          @if (isUploading()) {
+            <span class="import-spinner" aria-hidden="true"></span>
+          } @else {
+            <span class="button-icon" aria-hidden="true">✳</span>
+          }
+          <span>{{ isUploading() ? 'READING YOUR ENTRIES' : 'IMPORT ENTRIES' }}</span>
+          <span class="button-arrow" aria-hidden="true">{{ isUploading() ? '' : '→' }}</span>
+        </button>
+
+        <div class="import-footnote">
+          <span class="lock-icon" aria-hidden="true">◇</span>
+          <span>Your file is processed locally by the companion Python service.</span>
+        </div>
+      </div>
+
+      <aside class="format-panel" aria-labelledby="format-title">
+        <p class="eyebrow panel-eyebrow">FILE FORMAT</p>
+        <h2 id="format-title">A simple header row<span class="heading-period">.</span></h2>
+        <p class="format-copy">Use one row per Instagram account. These column names are recognized:</p>
+        <div class="format-fields">
+          <div class="format-field"><span class="field-required">REQUIRED</span><code>username</code><span class="field-alias">or instagram_username</span></div>
+          <div class="format-field"><span class="field-optional">OPTIONAL</span><code>avatar_url</code><span class="field-alias">profile image link</span></div>
+        </div>
+        <div class="format-example">
+          <div class="example-top"><span>CSV EXAMPLE</span><span>01 / 02</span></div>
+          <pre>username,avatar_url
+mila.rose,https://…
+theoandco,https://…</pre>
+        </div>
+      </aside>
+    </section>
+
+    <footer class="page-footer">
+      <span>YOUR ENTRIES STAY IN THIS SESSION</span>
+      <span class="footer-right"><span>CSV / XLSX</span><span class="status-dot"></span></span>
+    </footer>
+  </main>
+</div>
