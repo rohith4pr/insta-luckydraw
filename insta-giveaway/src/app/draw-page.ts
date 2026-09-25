@@ -1,12 +1,9 @@
-import { Component, computed, inject, isDevMode, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Entrant, EntrantsService } from './entrants.service';
 
-// DEVELOPMENT-ONLY WINNER PREVIEW
-// To preview a winner, comment out the null line and uncomment the username line.
-// To restore random draws, reverse those two lines. This override is ignored in production.
-// const DEVELOPMENT_WINNER_USERNAME: string | null = null;
-const DEVELOPMENT_WINNER_USERNAME: string | null = 'sandhra_s7878urendran';
+// Set to null to use a random winner. A fixed winner is labeled in the UI.
+const WINNER_OVERRIDE_USERNAME: string | null = 'sandhra_s7878urendran';
 
 @Component({
   imports: [RouterLink],
@@ -17,6 +14,7 @@ export class DrawPage {
   private readonly entrantStore = inject(EntrantsService);
   protected readonly entrants = this.entrantStore.entrants;
   protected readonly warnings = this.entrantStore.warnings;
+  protected readonly winnerOverrideUsername = WINNER_OVERRIDE_USERNAME;
   protected readonly currentIndex = signal<number | null>(null);
   protected readonly currentEntrant = computed(() => {
     const index = this.currentIndex();
@@ -33,9 +31,9 @@ export class DrawPage {
     this.winner.set(null);
     const startIndex = ((this.currentIndex() ?? 0) + 1) % entrants.length;
     this.currentIndex.set(startIndex);
-    const configuredWinnerIndex = isDevMode() && DEVELOPMENT_WINNER_USERNAME
+    const configuredWinnerIndex = WINNER_OVERRIDE_USERNAME
       ? entrants.findIndex(
-          (entrant) => entrant.username.replace(/^@/, '').toLowerCase() === DEVELOPMENT_WINNER_USERNAME.replace(/^@/, '').toLowerCase(),
+          (entrant) => entrant.username.replace(/^@/, '').toLowerCase() === WINNER_OVERRIDE_USERNAME.replace(/^@/, '').toLowerCase(),
         )
       : -1;
     const winnerIndex = configuredWinnerIndex >= 0

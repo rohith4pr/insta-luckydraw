@@ -25,7 +25,7 @@
         <div class="draw-stage" [class.is-spinning]="isSpinning()" [class.has-winner]="winner()">
           <div class="stage-topline">
             <span class="stage-label"><span class="live-dot"></span>{{ isSpinning() ? 'DRAW IN PROGRESS' : winner() ? 'DRAW COMPLETE' : 'READY WHEN YOU ARE' }}</span>
-            <span class="stage-index">NO. 001 <span aria-hidden="true">·</span> RANDOM DRAW</span>
+            <span class="stage-index">NO. 001 <span aria-hidden="true">·</span> {{ winnerOverrideUsername ? 'FIXED TEST WINNER' : 'RANDOM DRAW' }}</span>
           </div>
 
           <div class="stage-center" aria-live="polite" aria-atomic="true">
@@ -63,7 +63,7 @@
             <span>{{ isSpinning() ? 'PICKING A WINNER' : winner() ? 'DRAW AGAIN' : 'PICK A WINNER' }}</span>
             <span class="button-arrow" aria-hidden="true">{{ isSpinning() ? '' : '→' }}</span>
           </button>
-          <p class="control-footnote"><span class="lock-icon" aria-hidden="true">◇</span> One name is selected at random from this list</p>
+          <p class="control-footnote"><span class="lock-icon" aria-hidden="true">◇</span> @if (winnerOverrideUsername) { Test mode: @{{ winnerOverrideUsername }} is fixed as the winner } @else { One name is selected at random from this list }</p>
         </div>
 
         @if (winner()) {
