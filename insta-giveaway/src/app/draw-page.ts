@@ -2,8 +2,11 @@ import { Component, computed, inject, isDevMode, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Entrant, EntrantsService } from './entrants.service';
 
+// DEVELOPMENT-ONLY WINNER PREVIEW
+// To preview a winner, comment out the null line and uncomment the username line.
+// To restore random draws, reverse those two lines. This override is ignored in production.
 const DEVELOPMENT_WINNER_USERNAME: string | null = null;
-
+// const DEVELOPMENT_WINNER_USERNAME: string | null = 'sandhra_s7878urendran';
 
 @Component({
   imports: [RouterLink],
