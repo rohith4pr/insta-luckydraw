@@ -39,7 +39,7 @@ export class ImportApiService {
   }
 
   private getApiBaseUrl(): Promise<string> {
-    this.apiBaseUrl ??= fetch('/app-config.json')
+    this.apiBaseUrl ??= fetch(new URL('app-config.json', document.baseURI))
       .then((response) => response.json() as Promise<AppConfig>)
       .then((config) => (config.apiBaseUrl ?? '').replace(/\/$/, ''));
     return this.apiBaseUrl;
