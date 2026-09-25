@@ -38,7 +38,7 @@ jobs:
         run: npm ci
 
       - name: Build Angular app
-        run: npx ng build --configuration production --base-href "/insta-luckydraw/"
+        run: npx ng build --configuration production --base-href "/"
 
       - name: Add SPA route fallback
         run: cp dist/insta-giveaway/browser/index.html dist/insta-giveaway/browser/404.html
