@@ -3,7 +3,8 @@ import { RouterLink } from '@angular/router';
 import { Entrant, EntrantsService } from './entrants.service';
 
 // Set to null to use a random winner. A fixed winner is labeled in the UI.
-const WINNER_OVERRIDE_USERNAME: string | null = 'sandhra_s7878urendran';
+// const WINNER_OVERRIDE_USERNAME: string | null = 'fixed.winner';
+const WINNER_OVERRIDE_USERNAME: string | null = null;
 
 @Component({
   imports: [RouterLink],
