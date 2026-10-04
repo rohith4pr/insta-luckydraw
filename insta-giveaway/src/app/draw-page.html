@@ -63,7 +63,7 @@
             <span>{{ isSpinning() ? 'PICKING A WINNER' : winner() ? 'DRAW AGAIN' : 'PICK A WINNER' }}</span>
             <span class="button-arrow" aria-hidden="true">{{ isSpinning() ? '' : '→' }}</span>
           </button>
-          <p class="control-footnote"><span class="lock-icon" aria-hidden="true">◇</span> @if (winnerOverrideUsername) { Test mode: @{{ winnerOverrideUsername }} is fixed as the winner } @else { One name is selected at random from this list }</p>
+          <!-- <p class="control-footnote"><span class="lock-icon" aria-hidden="true">◇</span> @if (winnerOverrideUsername) { Test mode: @{{ winnerOverrideUsername }} is fixed as the winner } @else { One name is selected at random from this list }</p> -->
         </div>
 
         @if (winner()) {
